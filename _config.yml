@@ -1,5 +1,5 @@
 encoding    : UTF-8
-exclude     : [.idea]
+exclude     : [.idea, vendor]
 github      : https://github.com/mattwright324/
 
 # make available on local network to test on other devices
