@@ -2111,15 +2111,6 @@ const mll = (function () {
                     $("#join-panel").show();
                 });
 
-                socket.on('room-expired', function () {
-                    console.log('current room expired, leaving')
-
-                    $(".leave-room").click();
-
-                    $("#warning-panel").show();
-                    $("#warn-reason").text("The room you were in has expired. Create a new room or join another.");
-                })
-
                 socket.on('room-pw-change', function (message) {
                     console.log('room password changed');
 
