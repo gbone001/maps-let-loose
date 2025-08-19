@@ -1969,7 +1969,7 @@ const mll = (function () {
                         $("#warning-panel").show();
                         $("#warn-reason").text("Either you lost connection or the rooms server restarted and the room no longer exists. Try joining again or create a new one.");
 
-                        document.title = "Rooms - Maps Let Loose"
+                        document.title = "Rooms - ANZR Maps Let Loose"
                     }
                 }
 
@@ -1990,7 +1990,7 @@ const mll = (function () {
                     $(".editor-key").val(message.editorKey);
                     $(".viewer-password").val(message.viewerPassword);
 
-                    document.title = message.roomId + " - Rooms - Maps Let Loose"
+                    document.title = message.roomId + " - Rooms - ANZR Maps Let Loose"
 
                     $("#warning-panel").hide();
                     elements.joinPanel.hide();
@@ -3919,7 +3919,7 @@ const mll = (function () {
                 const zip = new JSZip();
                 console.log("Creating about.txt...")
                 zip.file("about.txt",
-                    "Downloaded by Maps Let Loose " + new Date().toLocaleString() + "\n\n" +
+                    "Downloaded by ANZR Maps Let Loose " + new Date().toLocaleString() + "\n\n" +
                     "URL: " + window.location
                 );
 
