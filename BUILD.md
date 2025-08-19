@@ -25,3 +25,4 @@ In CMD or terminal, cd to the project directory you cloned to and run `bundle ex
 
 Update the application with any editor you prefer (WebStorm, VSCode, Notepad++, etc.), Jekyll works such that edits to files
 made while it is running will be picked up and published only needing you to refresh the browser instance to see them.
+auto build file added
