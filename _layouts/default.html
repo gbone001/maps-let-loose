@@ -83,6 +83,11 @@
                     </ul>
                 </li>
             </ul>
+            <div class="navbar-text" style="margin-right: 10px;">
+                <button id="logout-btn" class="btn btn-outline-light btn-sm" onclick="sessionStorage.removeItem('anzr_maps_authenticated'); location.reload();">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </div>
             <div class="navbar-text" style="margin-right: 15px;">
                 <button id="save" class="btn btn-secondary btn-sm">
                     <i class="bi bi-image"></i>
@@ -101,6 +106,34 @@
     #mobileContextModal .accordion * {
         background-color: transparent;
         border-radius: 0;
+    }
+    .access-denied {
+        text-align: center;
+        margin-top: 100px;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        background-color: #212529;
+        padding: 40px;
+        border-radius: 10px;
+        max-width: 500px;
+        margin: 100px auto;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    .access-denied h2 {
+        color: #dc3545;
+        margin-bottom: 20px;
+    }
+    .access-denied button {
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .access-denied button:hover {
+        background-color: #0b5ed7;
     }
 </style>
 <div class="modal fade" id="mobileContextModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

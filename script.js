@@ -1,6 +1,37 @@
 const mll = (function () {
     'use strict';
 
+    // Password protection
+    function checkPassword() {
+        const correctPassword = "ANZR2025"; // Change this to your desired password
+        const sessionKey = "anzr_maps_authenticated";
+        
+        // Check if already authenticated in this session
+        if (sessionStorage.getItem(sessionKey) === "true") {
+            return true;
+        }
+        
+        const userPassword = prompt("Enter password to access ANZR Maps Let Loose:");
+        
+        if (userPassword === correctPassword) {
+            sessionStorage.setItem(sessionKey, "true");
+            return true;
+        } else if (userPassword !== null) {
+            alert("Incorrect password. Access denied.");
+            return false;
+        } else {
+            // User cancelled the prompt
+            return false;
+        }
+    }
+
+    // Check password on page load
+    if (!checkPassword()) {
+        // Redirect to a blank page or hide content
+        document.body.innerHTML = '<div class="access-denied"><h2>Access Denied</h2><p>You need the correct password to access ANZR Maps Let Loose.</p><button onclick="location.reload()">Try Again</button></div>';
+        return {}; // Return empty object to prevent further execution
+    }
+
     const elements = {};
     const controls = {};
     const build = document.querySelector("meta[name='build']").content;
