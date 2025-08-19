@@ -29,6 +29,31 @@ What other features are there?
 - Rooms can be configured with a custom password or no password at all
 - Rooms expire after 2 hours of inactivity, plenty to last the majority of matches
 
+## Server Setup
+
+This project includes a Socket.io server for the collaborative rooms feature. The server is located in the `/server` directory.
+
+### Quick Setup:
+
+1. **Install dependencies:**
+   ```bash
+   cd server
+   npm install
+   ```
+
+2. **Run locally:**
+   ```bash
+   npm start
+   ```
+
+3. **Deploy to Railway (recommended):**
+   - Sign up at [railway.app](https://railway.app)
+   - Connect this GitHub repository
+   - Railway will auto-deploy the server
+   - Update the client code with your server URL
+
+See `/server/README.md` for detailed setup and deployment instructions.
+
 ## Build
 
 Refer to [BUILD.md](./BUILD.md)

@@ -1,0 +1,29 @@
+{
+  "name": "anzr-maps-let-loose",
+  "version": "1.0.0",
+  "description": "ANZR Maps Let Loose - Advanced custom tacmaps for Hell Let Loose with collaborative rooms",
+  "scripts": {
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "server:install": "cd server && npm install",
+    "setup-railway": "node setup-railway.js",
+    "deploy-check": "node setup-railway.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gbone001/maps-let-loose.git"
+  },
+  "keywords": [
+    "hell-let-loose",
+    "tactical-maps",
+    "collaboration",
+    "gaming",
+    "strategy"
+  ],
+  "author": "ANZR",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gbone001/maps-let-loose/issues"
+  },
+  "homepage": "https://github.com/gbone001/maps-let-loose#readme"
+}

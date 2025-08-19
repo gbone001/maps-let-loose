@@ -1,0 +1,112 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Test the server code
+  test:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'server/') || contains(github.event.head_commit.added, 'server/') || github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'server/package-lock.json'
+
+    - name: Install dependencies
+      run: |
+        cd server
+        npm ci
+
+    - name: Lint code
+      run: |
+        cd server
+        npm run lint --if-present
+
+    - name: Run tests
+      run: |
+        cd server
+        npm test --if-present
+
+    - name: Check server starts
+      run: |
+        cd server
+        timeout 10s npm start || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+
+  # Deploy to Railway (only on main branch)
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && (contains(github.event.head_commit.modified, 'server/') || contains(github.event.head_commit.added, 'server/'))
+    
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to Railway
+      id: deploy
+      uses: railwayapp/railway-deploy@v3
+      with:
+        railway_token: ${{ secrets.RAILWAY_TOKEN }}
+        service: ${{ secrets.RAILWAY_SERVICE_ID }}
+        detach: true
+      env:
+        NODE_ENV: production
+        PORT: ${{ secrets.PORT || '3001' }}
+        ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
+
+    - name: Wait for deployment
+      run: sleep 30
+
+    - name: Health check
+      run: |
+        RAILWAY_URL="${{ steps.deploy.outputs.url || secrets.RAILWAY_URL }}"
+        if [ ! -z "$RAILWAY_URL" ]; then
+          echo "Checking health at: $RAILWAY_URL/health"
+          curl -f "$RAILWAY_URL/health" || exit 1
+          echo "✅ Health check passed!"
+        else
+          echo "⚠️  Railway URL not available, skipping health check"
+        fi
+
+    - name: Notify success
+      if: success()
+      run: |
+        echo "🚀 Deployment successful!"
+        echo "Server URL: ${{ steps.deploy.outputs.url || secrets.RAILWAY_URL }}"
+
+  # Deploy client to GitHub Pages (optional)
+  deploy-client:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.modified, 'server/')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '.'
+
+    - name: Deploy to GitHub Pages
+      if: github.repository_owner == 'gbone001'
+      id: deployment
+      uses: actions/deploy-pages@v4

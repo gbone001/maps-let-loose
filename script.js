@@ -559,7 +559,7 @@ const mll = (function () {
     }
 
     function roomEditorUpdateSlides() {
-        if (roomsMode && roomsRole === 'editor') {
+        if (roomsMode && roomsRole === 'editor' && socket) {
             console.log('sending editor-slides event');
             const payload = {
                 roomId: controls.inputRoomId.val(),
@@ -575,7 +575,7 @@ const mll = (function () {
         updateSlideControls();
         const controlAbout = control instanceof jQuery ? control.attr("id") + "=" + (control.val() || control.is(":checked")) : control;
         console.log("roomEditorUpdateControls(%s)", controlAbout)
-        if (roomsMode && roomsRole === 'editor') {
+        if (roomsMode && roomsRole === 'editor' && socket) {
             console.log('sending editor-controls event')
             const payload = {
                 roomId: controls.inputRoomId.val(),
@@ -638,7 +638,7 @@ const mll = (function () {
 
     function roomEditorUpdateElements() {
         updateSlideElements();
-        if (roomsMode && roomsRole === 'editor') {
+        if (roomsMode && roomsRole === 'editor' && socket) {
             console.log('sending editor-elements event');
 
             socket.emit('editor-elements', {
@@ -665,7 +665,7 @@ const mll = (function () {
 
     function roomEditorUpdateDrawings() {
         updateSlideDrawings();
-        if (roomsMode && roomsRole === 'editor') {
+        if (roomsMode && roomsRole === 'editor' && socket) {
             console.log('sending editor-drawings event')
             socket.emit('editor-drawings', {
                 roomId: controls.inputRoomId.val(),
@@ -1927,9 +1927,19 @@ const mll = (function () {
             if (elements.joinPanel[0]) {
                 roomsMode = true;
 
-                console.log("Rooms Mode");
-                socket = io('https://mll-socket.apps.mattw.io/');
-                // socket = io('localhost:3000');
+                console.log("Rooms Mode - Server unavailable");
+                
+                // Show error message that rooms feature is unavailable
+                elements.joinError.html('<div class="alert alert-warning" role="alert">' +
+                    '<strong>Rooms Feature Unavailable</strong><br>' +
+                    'The collaborative rooms feature requires a server connection that is currently not available. ' +
+                    'Please use the <a href="./">Solo Mode</a> for single-user map editing.' +
+                    '</div>');
+                    
+                controls.btnCreateJoin.prop('disabled', true);
+                
+                // Don't attempt socket connection
+                socket = null;
             } else {
                 roomsMode = false;
                 console.log("Solo Mode");
@@ -1940,7 +1950,7 @@ const mll = (function () {
             })
 
             controls.btnCreateJoin.click(function () {
-                if (!roomsMode) {
+                if (!roomsMode || !socket) {
                     return;
                 }
 
@@ -1965,53 +1975,55 @@ const mll = (function () {
 
                 controls.inputRoomId.val("Map-Session-" + Math.trunc(99999 * Math.random()))
 
-                socket.on('room-status', function (message) {
-                    console.log(message);
+                // Only set up socket event handlers if socket is available
+                if (socket) {
+                    socket.on('room-status', function (message) {
+                        console.log(message);
 
-                    $(".connected").text(message.connected)
-                    $(".editors").text(message.editors)
-                    $(".viewers").text(message.viewers)
-                })
+                        $(".connected").text(message.connected)
+                        $(".editors").text(message.editors)
+                        $(".viewers").text(message.viewers)
+                    })
 
-                socket.on('join-error', function (message) {
-                    console.warn('Join error')
+                    socket.on('join-error', function (message) {
+                        console.warn('Join error')
 
-                    elements.joinError.text(JSON.stringify(message));
-                });
+                        elements.joinError.text(JSON.stringify(message));
+                    });
 
-                socket.on('connect_error', function (error) {
-                    console.warn('connect error')
+                    socket.on('connect_error', function (error) {
+                        console.warn('connect error')
 
-                    elements.joinError.text(JSON.stringify(error));
-                    controls.btnCreateJoin.prop('disabled', true);
-                });
+                        elements.joinError.text(JSON.stringify(error));
+                        controls.btnCreateJoin.prop('disabled', true);
+                    });
 
-                async function checkRestart() {
-                    if ($("#viewer-panel").is(":visible") || $("#editor-panel").is(":visible")) {
-                        console.warn('server restart, room no longer exists')
+                    async function checkRestart() {
+                        if ($("#viewer-panel").is(":visible") || $("#editor-panel").is(":visible")) {
+                            console.warn('server restart, room no longer exists')
 
-                        $("#viewer-panel").hide();
-                        $("#extra-panel").hide();
-                        $("#editor-panel").hide();
-                        $("#menu-panel").hide();
-                        $("#canvas-panel").hide();
-                        $("#join-panel").show();
+                            $("#viewer-panel").hide();
+                            $("#extra-panel").hide();
+                            $("#editor-panel").hide();
+                            $("#menu-panel").hide();
+                            $("#canvas-panel").hide();
+                            $("#join-panel").show();
 
-                        $("#warning-panel").show();
-                        $("#warn-reason").text("Either you lost connection or the rooms server restarted and the room no longer exists. Try joining again or create a new one.");
+                            $("#warning-panel").show();
+                            $("#warn-reason").text("Either you lost connection or the rooms server restarted and the room no longer exists. Try joining again or create a new one.");
 
-                        document.title = "Rooms - ANZR Maps Let Loose"
+                            document.title = "Rooms - ANZR Maps Let Loose"
+                        }
                     }
-                }
 
-                socket.on('connect', function () {
-                    console.info('connected')
+                    socket.on('connect', function () {
+                        console.info('connected')
 
-                    elements.joinError.text("");
-                    controls.btnCreateJoin.prop('disabled', false);
+                        elements.joinError.text("");
+                        controls.btnCreateJoin.prop('disabled', false);
 
-                    checkRestart();
-                });
+                        checkRestart();
+                    });
 
                 socket.on('join-success', function (message) {
                     console.log('join-success')
@@ -2187,13 +2199,16 @@ const mll = (function () {
                     if (roomsRole === 'viewer') {
                         return;
                     }
-                    socket.emit('update-room-pw', {
-                        roomId: sanitize(controls.inputRoomId.val()),
-                        editorKey: sanitize($("#editorKeyDisplay").val()),
-                        viewerPassword: sanitize($("#editor-viewer-pw").val())
-                    });
+                    if (socket) {
+                        socket.emit('update-room-pw', {
+                            roomId: sanitize(controls.inputRoomId.val()),
+                            editorKey: sanitize($("#editorKeyDisplay").val()),
+                            viewerPassword: sanitize($("#editor-viewer-pw").val())
+                        });
+                    }
                 });
                 $("#editor-update-pw").prop('disabled', true);
+                } // Close socket conditional block
             }
 
             controls.fabricCanvas = new fabric.Canvas(elements.canvas.get(0), {
