@@ -1,3 +1,18 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy-client:
+    runs-on: ubuntu-latest
+    steps:
+      # your deployment steps here
+
 name: Deploy to Railway
 
 on:
