@@ -14,33 +14,25 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+      NODE_ENV: production
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: 'server/package-lock.json'
+      - name: Install dependencies
+        run: |
+          cd server
+          npm ci
 
-    - name: Install dependencies
-      run: |
-        cd server
-        npm ci
+      - name: Run tests (if any)
+        run: |
+          cd server
+          npm test --if-present
 
-    - name: Run tests (if any)
-      run: |
-        cd server
-        npm test --if-present
-
-    - name: Deploy to Railway
-      uses: railwayapp/railway-deploy@v3
-      with:
-        railway_token: ${{ secrets.RAILWAY_TOKEN }}
-        service: ${{ secrets.RAILWAY_SERVICE_ID }}
-        detach: true
-      env:
-        NODE_ENV: production
+      - name: Deploy to Railway
+        run: railway up --service=$RAILWAY_SERVICE_ID
