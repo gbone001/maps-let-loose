@@ -11,6 +11,11 @@ on:
     paths:
       - 'server/**'
 
+# Sets permissions of the GITHUB_TOKEN
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
