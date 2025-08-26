@@ -1,0 +1,22 @@
+# Nixpacks configuration for a Jekyll (Ruby) site
+[phases.setup]
+nixPkgs = [
+  "ruby",
+  "bundler",
+  "nodejs"
+]
+
+[phases.install]
+cmds = [
+  "bundle install"
+]
+
+[phases.build]
+cmds = [
+  "bundle exec jekyll build"
+]
+
+[phases.start]
+cmds = [
+  "bundle exec jekyll serve --host 0.0.0.0 --port 8080"
+]
