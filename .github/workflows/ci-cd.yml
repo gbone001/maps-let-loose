@@ -1,8 +1,7 @@
-name: CI/CD Pipeline
-
 permissions:
   contents: read
   id-token: write
+  name: CI/CD Pipeline
 
 on:
   push:
