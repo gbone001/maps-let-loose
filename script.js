@@ -1928,7 +1928,7 @@ const mll = (function () {
                 roomsMode = true;
                 // Try to connect to Railway backend
                 try {
-                    socket = io("https://maps-let-loose-production.up.railway.app");
+                    socket = io("https://maps-let-loose-production.up.railway.app:4000");
                     console.log("Rooms Mode - Connected to Railway backend");
                 } catch (err) {
                     console.log("Rooms Mode - Server unavailable");
