@@ -8,14 +8,12 @@ const server = http.createServer(app);
 
 // Environment variables
 const PORT = process.env.PORT;
-const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? 
-  process.env.ALLOWED_ORIGINS.split(',') : 
-  ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:4000'];
+const ALLOWED_ORIGINS = ['https://gbone001.github.io'];
 
 // Socket.io setup with CORS
 const io = socketIo(server, {
   cors: {
-    origin: ALLOWED_ORIGINS,
+    origin: 'https://gbone001.github.io',
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -23,7 +21,7 @@ const io = socketIo(server, {
 
 // Express middleware
 app.use(cors({
-  origin: ALLOWED_ORIGINS,
+  origin: 'https://gbone001.github.io',
   credentials: true
 }));
 
