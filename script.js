@@ -1926,20 +1926,22 @@ const mll = (function () {
 
             if (elements.joinPanel[0]) {
                 roomsMode = true;
-
-                console.log("Rooms Mode - Server unavailable");
-                
-                // Show error message that rooms feature is unavailable
-                elements.joinError.html('<div class="alert alert-warning" role="alert">' +
-                    '<strong>Rooms Feature Unavailable</strong><br>' +
-                    'The collaborative rooms feature requires a server connection that is currently not available. ' +
-                    'Please use the <a href="./">Solo Mode</a> for single-user map editing.' +
-                    '</div>');
-                    
-                controls.btnCreateJoin.prop('disabled', true);
-                
-                // Don't attempt socket connection
-                socket = null;
+                // Try to connect to Railway backend
+                try {
+                    socket = io("https://maps-let-loose-production.up.railway.app");
+                    console.log("Rooms Mode - Connected to Railway backend");
+                } catch (err) {
+                    console.log("Rooms Mode - Server unavailable");
+                    // Show error message that rooms feature is unavailable
+                    elements.joinError.html('<div class="alert alert-warning" role="alert">' +
+                        '<strong>Rooms Feature Unavailable</strong><br>' +
+                        'The collaborative rooms feature requires a server connection that is currently not available. ' +
+                        'Please use the <a href="./">Solo Mode</a> for single-user map editing.' +
+                        '</div>');
+                    controls.btnCreateJoin.prop('disabled', true);
+                    // Don't attempt socket connection
+                    socket = null;
+                }
             } else {
                 roomsMode = false;
                 console.log("Solo Mode");
