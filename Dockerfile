@@ -25,4 +25,4 @@ EXPOSE 4000
 
 # Start Jekyll server
 CMD ["bundle", "exec", "jekyll", "serve", "--host", "0.0.0.0"]
-bundle _2.4.22_ install
+RUN bundle _2.4.22_ install
