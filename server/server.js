@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 
 // Environment variables
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const ALLOWED_ORIGINS = ['https://gbone001.github.io'];
 
 // Socket.io setup with CORS
