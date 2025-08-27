@@ -13,7 +13,7 @@ Install Ruby (and gems jekyll and bundler) following the steps for your operatin
 
 - https://jekyllrb.com/docs/installation/
     - Ruby+Devkit default settings
-    - `gem install jekyll bundler`
+    - `gem install jekyll bundler -v 2.4.22`
 
 In CMD or terminal, cd to the project directory you cloned to and run `bundle install` to install necessary gems
 for github-pages in the project Gemfile (this may take some time).
