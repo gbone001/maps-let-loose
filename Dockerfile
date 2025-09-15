@@ -2,7 +2,12 @@
 FROM ruby:3.1.0
 
 # Install dependencies
-RUN apt-get update -qq && apt-get install -y build-essential libssl-dev libyaml-dev libreadline-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev nodejs
+RUN apt-get update -qq && apt-get install -y build-essential libssl-dev libyaml-dev libreadline-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev nodejs \
+ build-essential \
+  libxml2-dev \
+  libxslt-dev \
+  zlib1g-dev \
+  pkg-config
 
 # Set working directory
 WORKDIR /app
