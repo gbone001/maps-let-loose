@@ -1928,8 +1928,8 @@ const mll = (function () {
                 roomsMode = true;
                 // Try to connect to new Socket.IO backend
                 try {
-                    socket = io("wss://maps-let-loose-socket-production.up.railway.app", { transports: ['websocket'] });
-                    console.log("Rooms Mode - Connected to maps-let-loose-socket-production backend");
+                    socket = io("wss://maps-let-loose-socket-production-2917.up.railway.app", { transports: ['websocket'] });
+                    console.log("Rooms Mode - Connected to maps-let-loose-socket-production-2917 backend");
                 } catch (err) {
                     console.log("Rooms Mode - Server unavailable");
                     // Show error message that rooms feature is unavailable
