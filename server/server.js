@@ -39,7 +39,7 @@ const roomPasswords = new Map();
 const roomTimeouts = new Map();
 
 // Constants
-const ROOM_EXPIRY_TIME = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const ROOM_EXPIRY_TIME = 14 * 24 * 60 * 60 * 1000; // 2 weeks in milliseconds
 const MAX_ELEMENTS = 1000;
 const MAX_DRAWINGS = 1000;
 
