@@ -8,12 +8,16 @@ const server = http.createServer(app);
 
 // Environment variables
 const PORT = process.env.PORT || 3000;
-const ALLOWED_ORIGINS = ['https://gbone001.github.io'];
+const ALLOWED_ORIGINS = [
+  'https://gbone001.github.io/maps-let-loose/',
+  'https://gbone001.github.io',
+  'https://maps-let-loose-socket-production.up.railway.app'
+];
 
 // Socket.io setup with CORS
 const io = socketIo(server, {
   cors: {
-    origin: 'https://gbone001.github.io',
+    origin: ALLOWED_ORIGINS,
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -21,7 +25,7 @@ const io = socketIo(server, {
 
 // Express middleware
 app.use(cors({
-  origin: 'https://gbone001.github.io',
+  origin: ALLOWED_ORIGINS,
   credentials: true
 }));
 
