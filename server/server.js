@@ -11,7 +11,8 @@ const PORT = process.env.PORT || 3000;
 const ALLOWED_ORIGINS = [
   'https://gbone001.github.io/maps-let-loose/',
   'https://gbone001.github.io',
-  'https://maps-let-loose-socket-production.up.railway.app'
+  'https://maps-let-loose-socket-production.up.railway.app',
+  'https://maps-let-loose-socket-production-2917.up.railway.app'
 ];
 
 // Socket.io setup with CORS
